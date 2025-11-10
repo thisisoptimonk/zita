@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generálás folyamatban...</title>
-    
+    <title>Betöltés folyamatban...</title>
+    <meta http-equiv="refresh" content="8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -15,10 +15,6 @@
             --color-text-primary: #e0e0e0;
             --color-text-secondary: #aaaaaa;
             --color-primary-orange: #FF8C00;
-            --color-container-bg: rgba(30, 30, 35, 0.7); /* Sötét "üveg" háttér */
-            --color-border: rgba(255, 255, 255, 0.1);
-            --color-shadow-dark: rgba(0, 0, 0, 0.5);
-            --color-shadow-light: rgba(255, 255, 255, 0.05);
         }
 
         /* === Alapstílusok === */
@@ -30,13 +26,6 @@
 
         html, body {
             height: 100%;
-        }
-
-        /* === "Lovable" stílusú mozgó háttér === */
-        @keyframes backgroundPan {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         body {
@@ -56,31 +45,13 @@
                 radial-gradient(at 80% 90%, hsla(28, 100%, 50%, 0.3) 0px, transparent 50%),
                 radial-gradient(at 10% 20%, hsla(35, 100%, 50%, 0.3) 0px, transparent 50%),
                 radial-gradient(at 50% 50%, hsla(260, 50%, 30%, 0.2) 0px, transparent 50%);
-            background-size: 200% 200%; /* Nagyobb méret az animációhoz */
-            animation: backgroundPan 40s ease infinite;
         }
 
-        /* === Konténer beúszó animáció === */
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: translateY(20px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* === "Üveg" hatású konténer === */
+        /* === Konténer (már nem "üveg") === */
         .modal-container {
             width: 100%;
             max-width: 600px;
-            background-color: var(--color-container-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 3rem 3.5rem;
-            box-shadow: 
-                0 4px 60px var(--color-shadow-dark),
-                0 1px 0px var(--color-shadow-light) inset;
-            border: 1px solid var(--color-border);
             text-align: center;
-            animation: fadeInScale 0.8s ease-out;
             position: relative;
         }
 
@@ -106,11 +77,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        @keyframes pulseOrange {
-            0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 140, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); }
-        }
 
         .loader-wrapper {
             display: flex;
@@ -125,15 +91,11 @@
             border: 4px solid rgba(255, 255, 255, 0.1);
             border-top-color: var(--color-primary-orange); 
             border-radius: 50%;
-            animation: rotatingLoader 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite,
-                         pulseOrange 2s ease-out infinite 0.5s;
+            animation: rotatingLoader 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
         }
 
         /* === Reszponzív === */
         @media (max-width: 600px) {
-            .modal-container {
-                padding: 2.5rem 1.5rem;
-            }
             .modal-container h1 {
                 font-size: 1.8rem;
             }
@@ -151,10 +113,11 @@
 <body>
 
     <div class="modal-container">
-        <h1 id="status-title">Generálás folyamatban...</h1>
+        <h1 id="status-title">Betöltés...</h1>
         <p id="status-text">
-            Személyre szabott elemzésed készül. Ne aggódj, az oldal automatikusan frissülni fog, amint elkészültünk.
+            Kérlek várj egy kicsit, amíg betöltenek az adatok!
         </p>
+        <p>Már mindjárt kész!</p>
         
         <div class="loader-wrapper">
             <div class="loader"></div>
@@ -166,7 +129,7 @@
             
             // --- Beállítások ---
             const DESTINATION_URL = 'index.html'; // A célfájl, amit az n8n generál
-            const FINAL_PAGE_KEY = 'data-placeholder="pageTitle"'; // Ezt keressük a kész fájlban
+            
             const POLLING_INTERVAL = 5000; // 5 másodpercenként ellenőriz
             const titleElement = document.getElementById('status-title');
             const textElement = document.getElementById('status-text');
@@ -187,11 +150,11 @@
                         // SIKER: Ha a letöltött HTML tartalmazza a kulcsszót
                         if (html.includes(FINAL_PAGE_KEY)) {
                             if (titleElement) titleElement.textContent = 'Siker! Átirányítás...';
-                            if (textElement) textElement.textContent = 'Az elemzésed elkészült, pillanat és mutatjuk.';
+                            if (textElement) textElement.textContent = 'Az elemzésed elkészült, egy pillanat és mutatom.';
                             
                             // Átirányítás a VÉGSŐ oldalra
                             setTimeout(() => {
-                                window.location.href = DESTINATION_URL; 
+                                window.location.href = DESTINATION_SURL; 
                             }, 1000); 
 
                         } else {
