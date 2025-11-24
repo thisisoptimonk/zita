@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-placeholder="pageTitle">OptiMonk Demo</title>
+<meta name="description" content="Tailored conversion-boosting presentation for e-commerce stores.">
+
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+:root {
+--color-primary: #FF6B35;
+--color-secondary: #000000;
+--color-dark: #ffffff;
+--color-primary-rgb: 255, 107, 53;
+--color-secondary-rgb: 0, 0, 0;
+--color-dark-rgb: 255, 255, 255;
+}
+
+/* === HÁTTÉR === */
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+/* === JAVÍTÁS: A body-ra CSAK a linear-gradient kerül === */
+/* Ez a színátmenet az oldal tetejétől (0%) az aljáig (100%) tart és GÖRGETHETŐ */
+background-image: linear-gradient(
+to bottom,
+var(--color-dark) -50%,
+rgba(var(--color-primary-rgb), 0.6) 130%
+);
+background-attachment: scroll; /* Ez görgődik az oldallal */
+
+min-height: 100vh;
+color: var(--color-secondary);
+line-height: 1.6;
+overflow-x: hidden;
+}
+
+.gradient-bg {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+height: 400px; /* A hegyek magassága */
+z-index: -1; /* A tartalom mögé kerül */
+
+/* Ezen a DIV-en CSAK a hegyek vannak */
+background-image:
+radial-gradient(ellipse 100% 50% at 50% 0%, rgba(220, 220, 220, 0.3) 0%, transparent 60%),
+radial-gradient(ellipse 90% 40% at 45% 0%, rgba(200, 200, 200, 0.2) 0%, transparent 70%),
+radial-gradient(ellipse 120% 45% at 55% 0%, rgba(200, 200, 200, 0.15) 0%, transparent 80%);
+
+background-repeat: no-repeat;
+background-position: top center; /* Mindháromra érvényes */
+background-size: 100% 250px, 100% 300px, 100% 350px;
+}
+
+
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 1.5rem;
+}
+
+.glass-card {
+background: rgba(var(--color-dark-rgb), 0.7);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(var(--color-dark-rgb), 0.2);
+border-radius: 24px;
+padding: 2rem;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 8px 20px rgba(var(--color-secondary-rgb), 0.05);
+}
+
+.glass-card:hover {
+transform: translateY(-8px);
+border-color: var(--color-primary);
+box-shadow: 0 20px 60px rgba(var(--color-primary-rgb), 0.2);
+}
+
+.analysis-section {
+padding-top: 6rem;
+padding-bottom: 2rem;
+}
+
+.analysis-box {
+background: var(--color-dark);
+border: 1px solid rgba(var(--color-secondary-rgb), 0.1);
+border-radius: 16px;
+padding: 2rem;
+box-shadow: 0 10px 30px rgba(var(--color-secondary-rgb), 0.05);
+}
+
+.analysis-box h2 {
+font-size: 1.5rem;
+margin-bottom: 1rem;
+color: var(--color-primary);
+}
+
+.analysis-box p, .analysis-box ul {
+font-size: 1.125rem;
+color: rgba(var(--color-secondary-rgb), 0.8);
+line-height: 1.7;
+}
+.analysis-box ul {
+padding-left: 1.5rem;
+margin-top: 1rem;
+}
+
+.analysis-box p strong {
+color: var(--color-secondary);
+}
+
+.hero {
+min-height: 90vh;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 6rem 1.5rem 4rem;
+position: relative;
+}
+
+.hero-content {
+max-width: 900px;
+}
+
+.badge {
+display: inline-block;
+padding: 0.5rem 1.5rem;
+background: rgba(var(--color-primary-rgb), 0.1);
+border: 1px solid var(--color-primary);
+border-radius: 50px;
+font-size: 0.875rem;
+font-weight: 600;
+color: var(--color-primary);
+margin-bottom: 2rem;
+animation: fadeInDown 0.8s ease-out;
+}
+
+.hero h1 {
+font-size: clamp(2.5rem, 6vw, 4.5rem);
+font-weight: 800;
+line-height: 1.1;
+margin-bottom: 1.5rem;
+background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.hero p {
+font-size: 1.25rem;
+color: rgba(var(--color-secondary-rgb), 0.7);
+max-width: 700px;
+margin: 0 auto 3rem;
+animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.hero-buttons {
+display: flex;
+gap: 1rem;
+justify-content: center;
+flex-wrap: wrap;
+animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.btn {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 1rem 2rem;
+font-size: 1rem;
+font-weight: 600;
+text-decoration: none;
+border-radius: 12px;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+cursor: pointer;
+border: 2px solid transparent;
+}
+
+.btn-primary {
+background: var(--color-primary);
+color: var(--color-dark);
+box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.btn-primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 15px 40px rgba(var(--color-primary-rgb), 0.4);
+}
+
+.btn-outline {
+background: transparent;
+border-color: rgba(var(--color-secondary-rgb), 0.2);
+color: var(--color-secondary);
+}
+
+.btn-outline:hover {
+border-color: var(--color-primary);
+background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.btn-ghost {
+background: rgba(var(--color-secondary-rgb), 0.1);
+color: var(--color-secondary);
+}
+
+.btn-ghost:hover {
+background: rgba(var(--color-secondary-rgb), 0.15);
+}
+
+section {
+padding: 6rem 1.5rem;
+position: relative;
+}
+
+.section-header {
+text-align: center;
+max-width: 800px;
+margin: 0 auto 4rem;
+}
+
+.section-label {
+display: inline-block;
+padding: 0.5rem 1rem;
+background: rgba(var(--color-primary-rgb), 0.1);
+border: 1px solid rgba(var(--color-secondary-rgb), 0.1);
+border-radius: 50px;
+font-size: 0.875rem;
+font-weight: 600;
+color: var(--color-primary);
+margin-bottom: 1rem;
+}
+
+.section-title {
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 800;
+margin-bottom: 1rem;
+line-height: 1.2;
+}
+
+.section-description {
+font-size: 1.125rem;
+color: rgba(var(--color-secondary-rgb), 0.7);
+max-width: 600px;
+margin: 0 auto;
+}
+
+.logo-cloud-section {
+padding-top: 2rem;
+padding-bottom: 4rem;
+}
+.logo-cloud-header {
+text-align: center;
+font-weight: 600;
+color: rgba(var(--color-secondary-rgb), 0.6);
+font-size: 0.875rem;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+margin-bottom: 2.5rem;
+}
+.logo-cloud-container {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+gap: 3rem;
+}
+.logo-cloud-container img {
+max-height: 40px;
+filter: grayscale(100%);
+opacity: 0.7;
+transition: all 0.3s;
+}
+.logo-cloud-container img:hover {
+filter: grayscale(0%);
+opacity: 1;
+}
+
+.problems-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 2rem;
+margin-top: 4rem;
+}
+.problem-card {
+text-align: center;
+position: relative;
+cursor: pointer;
+}
+.icon-wrapper {
+width: 4rem;
+height: 4rem;
+margin: 0 auto 1.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 16px;
+background: rgba(var(--color-primary-rgb), 0.15);
+position: relative;
+}
+.icon-wrapper::before {
+content: '';
+position: absolute;
+inset: -2px;
+border-radius: 16px;
+padding: 2px;
+background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+-webkit-mask-composite: xor;
+mask-composite: exclude;
+opacity: 0;
+transition: opacity 0.3s;
+}
+.glass-card:hover .icon-wrapper::before {
+opacity: 1;
+}
+.icon {
+width: 2rem;
+height: 2rem;
+color: var(--color-primary);
+}
+.problem-card h3 {
+font-size: 1.25rem;
+font-weight: 700;
+margin-bottom: 0.5rem;
+}
+.problem-card p {
+color: rgba(var(--color-secondary-rgb), 0.7);
+}
+
+.solutions-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 2rem;
+margin-top: 4rem;
+}
+.solution-card {
+position: relative;
+overflow: hidden;
+cursor: pointer;
+}
+.solution-card .icon-wrapper {
+margin-bottom: 1.5rem;
+}
+.solution-card h3 {
+font-size: 1.25rem;
+font-weight: 700;
+margin-bottom: 0.75rem;
+}
+.solution-card p {
+color: rgba(var(--color-secondary-rgb), 0.7);
+font-size: 0.95rem;
+}
+
+.how-it-works-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 2rem;
+margin-top: 4rem;
+}
+.step-card {
+position: relative;
+padding-top: 3.5rem;
+}
+.step-card h3 {
+font-size: 1.25rem;
+font-weight: 700;
+margin-bottom: 0.75rem;
+}
+.step-card p {
+color: rgba(var(--color-secondary-rgb), 0.7);
+font-size: 0.95rem;
+}
+.step-number {
+position: absolute;
+top: 1.5rem;
+left: 2rem;
+font-size: 2rem;
+font-weight: 800;
+color: var(--color-primary);
+opacity: 0.5;
+}
+
+.testimonial-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 2rem;
+margin-top: 4rem;
+}
+.testimonial-card p.testimonial-text {
+font-size: 1.125rem;
+font-style: italic;
+margin-bottom: 2rem;
+color: rgba(var(--color-secondary-rgb), 0.8);
+position: relative;
+padding-left: 2rem;
+}
+.testimonial-card p.testimonial-text::before {
+content: '“';
+position: absolute;
+left: 0;
+top: -0.5rem;
+font-size: 3rem;
+color: var(--color-primary);
+opacity: 0.6;
+}
+.testimonial-author-wrapper {
+display: flex;
+align-items: center;
+gap: 1rem;
+}
+.testimonial-author-wrapper img {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+border: 2px solid rgba(var(--color-secondary-rgb), 0.1);
+}
+.testimonial-author-wrapper cite {
+font-weight: 600;
+font-style: normal;
+color: var(--color-secondary);
+}
+.testimonial-author-wrapper cite span {
+display: block;
+font-weight: 400;
+font-size: 0.875rem;
+color: rgba(var(--color-secondary-rgb), 0.7);
+}
+
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 2rem;
+margin-top: 4rem;
+}
+.stat-card {
+text-align: center;
+}
+.stat-number {
+font-size: 3.5rem;
+font-weight: 800;
+background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+margin-bottom: 0.5rem;
+line-height: 1;
+}
+.stat-label {
+color: rgba(var(--color-secondary-rgb), 0.7);
+font-size: 1rem;
+}
+
+.cta-section {
+text-align: center;
+padding: 8rem 1.5rem;
+position: relative;
+}
+.cta-content {
+max-width: 700px;
+margin: 0 auto;
+padding: 4rem 2rem;
+background: rgba(var(--color-dark-rgb), 0.7);
+border-radius: 32px;
+border: 1px solid rgba(var(--color-dark-rgb), 0.2);
+backdrop-filter: blur(20px);
+}
+.cta-content h2 {
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 800;
+margin-bottom: 1rem;
+}
+.cta-content p {
+font-size: 1.125rem;
+color: rgba(var(--color-secondary-rgb), 0.7);
+margin-bottom: 2rem;
+}
+
+@keyframes fadeInDown {
+from { opacity: 0; transform: translateY(-30px); }
+to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+from { opacity: 0; transform: translateY(30px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.scroll-reveal {
+opacity: 0;
+transform: translateY(30px);
+transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.scroll-reveal.revealed {
+opacity: 1;
+transform: translateY(0);
+}
+
+.om-campaign {
+position: fixed;
+inset: 0;
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 10000;
+}
+.om-campaign.active {
+display: flex;
+}
+.om-overlay {
+position: absolute;
+inset: 0;
+background: rgba(var(--color-secondary-rgb), 0.7);
+backdrop-filter: blur(12px);
+}
+.om-popup {
+position: relative;
+background: var(--color-dark);
+border-radius: 24px;
+overflow: hidden;
+width: 90%;
+max-width: 900px;
+box-shadow: 0 25px 50px -12px rgba(var(--color-secondary-rgb), 0.5);
+animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.om-popup-inner {
+display: grid;
+grid-template-columns: 1fr 1fr;
+align-items: center;
+min-height: 500px;
+}
+/* ÚJ: Egyoszlopos popup belső */
+.om-popup-inner-single {
+display: block;
+min-height: auto;
+text-align: center;
+}
+.om-left {
+padding: 3rem 2.5rem;
+}
+
+/* === KÉP STÍLUSOK === */
+
+.om-right {
+position: relative;
+background: rgba(var(--color-primary-rgb), 0.05);
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 0;
+height: 100%;
+/* FONTOS: Az overflow innen lekerül, hogy a panneren legyen */
+}
+
+.om-image-panner {
+width: 100%;
+height: 100%;
+overflow: hidden; /* EZ A LÉNYEG: Ez vágja le a képet */
+position: relative; /* Pozicionálási alap a gombokhoz */
+}
+.om-product-img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+object-position: center center;
+border-radius: 0;
+box-shadow: none;
+/* A transformot mozgatja a JS */
+transform: translate(0, 0);
+transition: object-fit 0.3s ease; /* A transform animációt kivesszük, hogy a húzás ne akadjon */
+user-select: none;
+-webkit-user-drag: none;
+}
+
+.om-product-img.is-draggable {
+cursor: grab;
+}
+.om-product-img.is-dragging {
+cursor: grabbing;
+}
+
+.om-image-controls {
+position: absolute;
+bottom: 1rem;
+right: 1rem;
+z-index: 5;
+display: flex;
+gap: 0.5rem;
+}
+
+.om-image-btn {
+background: rgba(0, 0, 0, 0.6);
+color: #ffffff;
+border: none;
+border-radius: 50%;
+width: 32px;
+height: 32px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: all 0.2s;
+backdrop-filter: blur(5px);
+padding: 6px;
+}
+
+.om-image-btn:hover {
+background: rgba(0, 0, 0, 0.8);
+transform: scale(1.1);
+}
+
+.om-image-swap-btn:hover {
+transform: scale(1.1) rotate(90deg);
+}
+
+/* === KÉP GOMBOK VÉGE === */
+
+.om-close {
+position: absolute;
+top: 1.5rem;
+right: 1.5rem;
+width: 40px;
+height: 40px;
+background: rgba(255, 255, 255, 0.1);
+border: 1px solid rgba(255, 255, 255, 0.2);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+color: var(--color-secondary);
+font-size: 1.5rem;
+transition: all 0.3s;
+z-index: 10;
+}
+
+.om-close:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: rotate(90deg);
+}
+
+.om-brand {
+margin-bottom: 1.5rem;
+}
+
+.om-brand img {
+width: 40%;
+padding: 0.5rem;
+border-radius: 20px;
+}
+
+.om-title {
+font-size: 2.5rem;
+font-weight: 800;
+margin-bottom: 1rem;
+color: var(--color-secondary);
+line-height: 1.2;
+}
+.om-text {
+font-size: 1.125rem;
+color: rgba(var(--color-secondary-rgb), 0.7);
+margin-bottom: 2rem;
+line-height: 1.6;
+}
+.om-input {
+width: 100%;
+padding: 1rem 1.25rem;
+border: 1px solid rgba(var(--color-secondary-rgb), 0.1);
+border-radius: 12px;
+margin-bottom: 1rem;
+font-size: 1rem;
+background: rgba(var(--color-secondary-rgb), 0.05);
+color: var(--color-secondary);
+transition: all 0.3s;
+}
+.om-input:focus {
+outline: none;
+border-color: var(--color-primary);
+background: rgba(var(--color-secondary-rgb), 0.08);
+}
+.om-button {
+width: 100%;
+padding: 1.125rem 2rem;
+background: var(--color-primary);
+color: var(--color-dark);
+font-weight: 700;
+font-size: 1rem;
+border: none;
+border-radius: 12px;
+cursor: pointer;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+transition: all 0.3s;
+box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.3);
+}
+.om-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 15px 40px rgba(var(--color-primary-rgb), 0.4);
+}
+.om-logo {
+font-size: 1.125rem;
+font-weight: 700;
+color: var(--color-primary);
+margin-bottom: 1.5rem;
+letter-spacing: 0.05em;
+}
+.om-subtitle {
+font-size: 1rem;
+color: rgba(var(--color-secondary-rgb), 0.7);
+margin-bottom: 2rem;
+}
+.om-products {
+background: rgba(var(--color-primary-rgb), 0.1);
+border: 1px solid rgba(var(--color-secondary-rgb), 0.1);
+border-radius: 12px;
+padding: 1.5rem;
+margin-bottom: 1.5rem;
+}
+.om-product {
+font-size: 0.95rem;
+color: var(--color-secondary);
+margin-bottom: 0.75rem;
+font-weight: 500;
+}
+.om-product:last-child {
+margin-bottom: 0;
+}
+.om-urgency {
+background: rgba(var(--color-primary-rgb), 0.1);
+color: var(--color-secondary);
+border: 1px solid rgba(var(--color-primary-rgb), 0.3);
+padding: 1rem 1.25rem;
+border-radius: 12px;
+font-weight: 600;
+margin-bottom: 1.5rem;
+text-align: center;
+}
+
+/* ÚJ: Szerencsekerék kép */
+.om-wheel-img {
+max-width: 250px;
+margin: 0 auto 1.5rem auto;
+}
+
+/* ÚJ: Visszaszámláló demó */
+.om-timer {
+font-size: 3rem;
+font-weight: 800;
+color: var(--color-primary);
+margin-bottom: 1rem;
+padding: 0.5rem 1rem;
+background: rgba(var(--color-primary-rgb), 0.1);
+border-radius: 12px;
+display: inline-block;
+}
+
+.om-nav-btn {
+position: fixed;
+top: 50%;
+transform: translateY(-50%);
+width: 50px;
+height: 50px;
+border-radius: 12px;
+background: var(--color-primary);
+border: none;
+cursor: pointer;
+display: none; /* 🚩 JAVÍTÁS: Alapból legyen rejtett */
+align-items: center;
+justify-content: center;
+z-index: 10001;
+transition: all 0.3s;
+box-shadow: 0 4px 12px rgba(var(--color-secondary-rgb), 0.3);
+opacity: 0.8;
+}
+.om-nav-btn:hover {
+background: var(--color-primary);
+border-color: var(--color-primary);
+transform: translateY(-50%) scale(1.1);
+box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.4);
+}
+.om-nav-btn svg {
+color: var(--color-secondary);
+transition: color 0.3s;
+}
+.om-nav-btn:hover svg {
+color: var(--color-dark);
+}
+.om-nav-prev {
+left: 2rem;
+}
+.om-nav-next {
+right: 2rem;
+}
+
+@keyframes scaleIn {
+from { transform: scale(0.9); opacity: 0; }
+to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+.om-popup-inner {
+grid-template-columns: 1fr;
+}
+/* ÚJ: Az egyoszlopos popupok mobilon is jól néznek ki */
+.om-popup-inner-single {
+grid-template-columns: 1fr;
+padding-top: 4rem; /* Hely a bezáró gombnak */
+}
+.solutions-grid {
+grid-template-columns: 1fr;
+}
+.om-right {
+display: none;
+}
+.om-left {
+padding: 2.5rem 1.5rem;
+}
+.om-nav-btn {
+width: 48px;
+height: 48px;
+}
+.om-nav-prev {
+left: 1rem;
+}
+.om-nav-next {
+right: 1rem;
+}
+.logo-cloud-container {
+gap: 2rem;
+}
+.logo-cloud-container img {
+max-height: 30px;
+}
+}
+
+/* === MODÁL STÍLUSOK (Probléma & Megoldás) === */
+.om-modal {
+position: fixed;
+inset: 0;
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 20000;
+}
+.om-modal.active {
+display: flex;
+}
+
+.om-modal-overlay {
+position: absolute;
+inset: 0;
+background: rgba(var(--color-secondary-rgb), 0.7);
+backdrop-filter: blur(12px);
+}
+
+.om-modal-content {
+position: relative;
+background: var(--color-dark);
+border-radius: 24px;
+padding: 3rem;
+width: 90%;
+max-width: 650px;
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.om-modal-close {
+position: absolute;
+top: 1rem;
+right: 1rem;
+width: 32px;
+height: 32px;
+background: rgba(var(--color-secondary-rgb), 0.1);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+color: var(--color-secondary);
+font-size: 1.25rem;
+transition: all 0.3s;
+}
+.om-modal-close:hover {
+background: rgba(var(--color-secondary-rgb), 0.2);
+transform: rotate(90deg);
+}
+
+.om-modal-icon {
+width: 3.5rem;
+height: 3.5rem;
+margin-bottom: 1.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 16px;
+background: rgba(var(--color-primary-rgb), 0.15);
+}
+.om-modal-icon .icon {
+width: 1.75rem;
+height: 1.75rem;
+color: var(--color-primary);
+}
+
+.om-modal-content h2 {
+font-size: 1.75rem;
+font-weight: 700;
+margin-bottom: 1rem;
+color: var(--color-secondary);
+}
+
+.om-modal-body {
+font-size: 1rem;
+line-height: 1.7;
+color: rgba(var(--color-secondary-rgb), 0.7);
+}
+
+.om-modal-body h3 {
+font-size: 1.125rem;
+font-weight: 700;
+color: var(--color-primary);
+margin-top: 1.5rem;
+margin-bottom: 0.5rem;
+}
+.om-modal-body p {
+margin-bottom: 1rem;
+}
+
+/* === 🚩 JAVÍTOTT: SZERENCSEKERÉK STÍLUSOK (Teljesen fehér) === */
+
+.om-wheel-img {
+display: none;
+}
+
+.om-spin-wheel-popup {
+max-width: 900px;
+background: var(--color-dark); /* JAVÍTVA: Visszaállítva fehérre */
+box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); /* JAVÍTVA: Visszaállítva az árnyék */
+color: var(--color-secondary);
+}
+
+.om-spin-wheel-inner {
+display: grid;
+grid-template-columns: 1fr 1fr;
+min-height: 550px;
+align-items: center;
+}
+
+/* Bal oldal (Kerék) */
+.om-spin-wheel-left {
+display: flex;
+align-items: center;
+justify-content: left;
+margin-left: -7rem;
+background: var(--color-dark); /* JAVÍTVA: Fehér háttér */
+height: 100%;
+border-radius: 24px 0 0 24px;
+position: relative;
+z-index: 1;
+}
+
+.css-wheel-container {
+position: relative; /* JAVÍTVA: Visszaállítva relatívra */
+/* Törölve az abszolút pozicionálás */
+transform: none;
+
+width: 550px; /* Visszaállítva kisebbre */
+height: 550px;
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 3;
+}
+
+.wheel-pointer {
+position: absolute;
+top: -10px;
+left: 50%;
+transform: translateX(-50%);
+width: 0;
+height: 0;
+border-left: 20px solid transparent;
+border-right: 20px solid transparent;
+border-top: 30px solid var(--color-primary);
+z-index: 5;
+filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+}
+
+.css-wheel {
+width: 100%;
+height: 100%;
+border-radius: 50%;
+border: 10px solid var(--color-secondary); /* JAVÍTVA: Fekete keret (jól látszik fehéren) */
+background: conic-gradient(
+var(--color-primary) 0deg 45deg,
+var(--color-secondary) 45deg 90deg,
+var(--color-primary) 90deg 135deg,
+var(--color-secondary) 135deg 180deg,
+var(--color-primary) 180deg 225deg,
+var(--color-secondary) 225deg 270deg,
+var(--color-primary) 270deg 315deg,
+var(--color-secondary) 315deg 360deg
+);
+box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+z-index: 4;
+}
+
+.wheel-inner-circle {
+position: absolute;
+width: 60px;
+height: 60px;
+background: var(--color-dark);
+border-radius: 50%;
+border: 5px solid var(--color-secondary);
+z-index: 5;
+}
+
+/* Jobb oldal (Szöveg) */
+.om-spin-wheel-right {
+background: transparent; /* JAVÍTVA: A háttér már a popupé */
+height: 100%;
+padding: 3rem 2.5rem;
+text-align: left;
+border-radius: 0; /* JAVÍTVA */
+z-index: 2;
+box-shadow: none; /* JAVÍTVA */
+}
+
+.om-spin-wheel-right .om-brand {
+margin-bottom: 1.5rem;
+}
+
+.om-spin-wheel-right .om-title {
+font-size: clamp(2rem, 4vw, 2.75rem);
+margin-bottom: 1.5rem;
+line-height: 1.2;
+color: var(--color-secondary);
+}
+
+.om-spin-wheel-right .om-text {
+font-size: 1rem;
+margin-bottom: 2rem;
+color: rgba(var(--color-secondary-rgb), 0.8);
+}
+
+.om-spin-wheel-input {
+background: rgba(var(--color-secondary-rgb), 0.05);
+border-color: rgba(var(--color-secondary-rgb), 0.1);
+color: var(--color-secondary);
+}
+.om-spin-wheel-input:focus {
+border-color: var(--color-primary);
+}
+
+.om-spin-wheel-button {
+margin-bottom: 1.5rem;
+}
+
+.om-secondary-button {
+display: block;
+width: 100%;
+padding: 0.8rem 1.5rem;
+background: transparent;
+color: rgba(var(--color-secondary-rgb), 0.7);
+border: none;
+font-size: 0.9rem;
+font-weight: 600;
+cursor: pointer;
+transition: color 0.3s;
+text-align: center;
+}
+.om-secondary-button:hover {
+color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.om-spin-wheel-popup {
+background: var(--color-dark);
+box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+.om-spin-wheel-inner {
+grid-template-columns: 1fr;
+min-height: auto;
+}
+.om-spin-wheel-left {
+height: 350px;
+padding: 3rem 1.5rem;
+background: var(--color-dark); /* JAVÍTVA: Fehér háttér */
+border-radius: 0;
+}
+.css-wheel-container {
+position: relative;
+transform: none;
+width: 300px;
+height: 300px;
+}
+.om-spin-wheel-right {
+padding: 2.5rem 1.5rem;
+text-align: center;
+box-shadow: none;
+background: var(--color-dark);
+border-radius: 0;
+}
+.om-spin-wheel-right .om-brand {
+margin: 0 auto 1.5rem auto;
+}
+}
+
+/* A "Nem kérem" gomb stílusa */
+.om-secondary-button {
+display: block;
+width: 100%;
+padding: 0.8rem 1.5rem;
+background: transparent;
+color: rgba(var(--color-secondary-rgb), 0.7);
+border: none;
+font-size: 0.9rem;
+font-weight: 600;
+cursor: pointer;
+transition: color 0.3s;
+text-align: center;
+}
+.om-secondary-button:hover {
+color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.om-spin-wheel-popup {
+background: var(--color-dark); /* Mobilon a teljes popup fehér */
+box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); /* Visszaadjuk az árnyékot */
+}
+.om-spin-wheel-inner {
+grid-template-columns: 1fr; /* Egy oszlop mobilon */
+min-height: auto;
+}
+.om-spin-wheel-left {
+height: 350px;
+padding: 3rem 1.5rem;
+background: var(--color-secondary); /* Mobilon is sötét a kerék háttere */
+border-radius: 0;
+}
+.css-wheel-container {
+position: relative; /* Visszaállítjuk relatívra */
+transform: translate(0, 0); /* Kikapcsoljuk az eltolást */
+width: 300px;
+height: 300px;
+}
+.om-spin-wheel-right {
+padding: 2.5rem 1.5rem;
+text-align: center;
+box-shadow: none; /* Mobilon nincs árnyék a jobb oldalon */
+background: var(--color-dark);
+border-radius: 0;
+}
+.om-spin-wheel-right .om-brand {
+margin: 0 auto 1.5rem auto;
+}
+}
+
+/* A "Nem kérem" gomb stílusa */
+.om-secondary-button {
+display: block;
+width: 100%;
+padding: 0.8rem 1.5rem;
+background: transparent;
+color: rgba(var(--color-secondary-rgb), 0.7);
+border: none;
+font-size: 0.9rem;
+font-weight: 600;
+cursor: pointer;
+transition: color 0.3s;
+text-align: center;
+}
+.om-secondary-button:hover {
+color: var(--color-primary);
+}
+
+.tools-panel {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999; 
+            
+            background: rgba(var(--color-dark-rgb), 0.7); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(var(--color-dark-rgb), 0.2); 
+            border-radius: 16px;
+            padding: 0.75rem 1.5rem;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            
+            display: flex; /* JAVÍTVA: A 'flex' marad, a láthatóságot máshogy kezeljük */
+            align-items: center;
+            gap: 1rem;
+            color: var(--color-secondary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            
+            /* --- ANIMÁCIÓ HOZZÁADVA --- */
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.3s ease, visibility 0.3s ease, bottom 0.3s ease;
+            bottom: -100px; /* Alapból "lecsúszva" */
+        }
+
+        /* Új "visible" osztály a megjelenítéshez */
+        .tools-panel.visible {
+            opacity: 1;
+            visibility: visible;
+            bottom: 1.5rem; /* Felcsúszik a helyére */
+        }
+
+        .tools-panel label {
+            opacity: 0.7;
+        }
+
+        .tools-panel input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(var(--color-secondary-rgb), 0.1);
+        }
+        .tools-panel input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        .tools-panel input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+        .tools-panel input[type="color"]::-moz-color-swatch { border: none; border-radius: 50%; }
+
+.tools-panel-btn {
+background: rgba(var(--color-secondary-rgb), 0.1);
+color: var(--color-secondary);
+border: 1px solid transparent;
+border-radius: 50%;
+width: 32px;
+height: 32px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: all 0.2s;
+}
+.tools-panel-btn svg {
+    width: 16px;
+    height: 16px;
+}
+        .tools-panel-btn:hover {
+border-color: var(--color-primary);
+}
+        .tools-panel-btn.active {
+background: var(--color-primary);
+color: var(--color-dark);
+border-color: var(--color-primary);
+}
+
+/* === Szerkeszthető Szöveg Stílus === */
+body.edit-mode-active [data-placeholder]:not(img):not(.om-timer) {
+outline: 2px dashed rgba(var(--color-primary-rgb), 0.7);
+outline-offset: 3px;
+cursor: text;
+}
+body.edit-mode-active [data-placeholder]:hover {
+background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.om-image-url-btn {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 6; /* A kép felett, és a controls mellett */
+    
+    /* Alapból rejtett */
+    display: none; 
+}
+
+/* Akkor mutatjuk, ha a body-n rajta van az editor-active-global osztály */
+body.editor-active-global .om-image-url-btn {
+    display: flex; /* Vagy inline-flex, ahogy a többi .om-image-btn */
+}
+
+
+/* === ÚJ MENTÉS ÉRTESÍTŐ STÍLUSA === */
+#save-notification {
+    position: fixed;
+    top: 20px;
+    left: -300px; /* Alapból a képernyőn kívül van */
+    z-index: 100000;
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    padding: 1rem 1.5rem;
+    border-radius: 0 12px 12px 0;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: left 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Be- és kiúszás animáció */
+}
+#save-notification.show {
+    left: 0px; /* Beúszik a helyére */
+} 
+
+</style>
+</head>
+<body>
+  <div id="save-notification">Changes saved</div>
+<div class="gradient-bg"></div>
+
+
+
+<section class="hero">
+<div class="hero-content">
+
+<h1 data-placeholder="heroTitle"></h1>
+<p data-placeholder="heroSubtitle"></p>
+<div class="hero-buttons">
+<a href="https://app.optimonk.com/register/en" class="btn btn-primary">
+<span>I'll try it for free</span>
+<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+</svg>
+</a>
+<a href="#" class="btn btn-ghost" id="demoButton" data-placeholder="heroDemoButton"></a>
+</div>
+</div>
+</section>
+
+<section class="logo-cloud-section">
+<div class="container">
+<h2 class="logo-cloud-header">More than 30,000 online stores trust OptiMonk, including:</h2>
+<div class="logo-cloud-container">
+<img src="https://www.optimonk.com/wp-content/uploads/image-1-3.png" alt="Partner Logó">
+<img src="https://www.optimonk.com/wp-content/uploads/image-4-4-768x147.png" alt="Partner Logó">
+<img src="https://www.optimonk.com/wp-content/uploads/acer-pp-logo.png" alt="Partner Logó">
+<img src="https://www.optimonk.com/wp-content/uploads/loccitane-logo-2.png" alt="Partner Logó">
+<img src="https://www.optimonk.com/wp-content/uploads/yamaha.png" alt="Partner Logó">
+</div>
+</div>
+</section>
+
+<section>
+<div class="container">
+<div class="section-header scroll-reveal">
+<span class="section-label" data-placeholder="problemsLabel"></span>
+<h2 class="section-title" data-placeholder="problemsTitle"></h2>
+</div>
+<div class="problems-grid">
+<div class="glass-card problem-card scroll-reveal" data-modal-target="problem1-modal">
+<div class="icon-wrapper">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+</svg>
+</div>
+<h3 data-placeholder="problem1Title"></h3>
+<p data-placeholder="problem1Text"></p>
+</div>
+<div class="glass-card problem-card scroll-reveal" data-modal-target="problem2-modal">
+<div class="icon-wrapper">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+</svg>
+</div>
+<h3 data-placeholder="problem2Title"></h3>
+<p data-placeholder="problem2Text"></p>
+</div>
+<div class="glass-card problem-card scroll-reveal" data-modal-target="problem3-modal">
+<div class="icon-wrapper">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+</svg>
+</div>
+<h3 data-placeholder="problem3Title"></h3>
+<p data-placeholder="problem3Text"></p>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="container">
+<div class="section-header scroll-reveal">
+<span class="section-label">Solutions</span>
+<h2 class="section-title" data-placeholder="solutionsTitle"></h2>
+<p class="section-description" data-placeholder="solutionsSubtitle"></p>
+</div>
+<div class="solutions-grid">
+<div class="glass-card solution-card scroll-reveal" data-popup-target="1">
+<div class="icon-wrapper">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+</svg>
+</div>
+<h3 data-placeholder="solution1Title"></h3>
+<p data-placeholder="solution1Text"></p>
+</div>
+<div class="glass-card solution-card scroll-reveal" data-popup-target="2">
+<div class="icon-wrapper">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+</svg>
+</div>
+<h3 data-placeholder="solution2Title"></h3>
+<p data-placeholder="solution2Text"></p>
+</div>
+<div class="glass-card solution-card scroll-reveal" data-popup-target="3">
+<div class="icon-wrapper">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+</svg>
+</div>
+<h3 data-placeholder="solution3Title"></h3>
+<p data-placeholder="solution3Text"></p>
+</div>
+<div class="glass-card solution-card scroll-reveal" data-popup-target="4">
+<div class="icon-wrapper">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+</svg>
+</div>
+<h3 data-placeholder="solution4Title"></h3>
+<p data-placeholder="solution4Text"></p>
+</div>
+<div class="glass-card solution-card scroll-reveal" data-popup-target="5">
+<div class="icon-wrapper">
+<svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+</svg>
+</div>
+<h3 data-placeholder="solution5Title"></h3>
+<p data-placeholder="solution5Text"></p>
+</div>
+<div class="glass-card solution-card scroll-reveal" data-popup-target="6">
+<div class="icon-wrapper">
+<svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+</div>
+<h3 data-placeholder="solution6Title"></h3>
+<p data-placeholder="solution6Text"></p>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="container">
+<div class="section-header scroll-reveal">
+<span class="section-label">The process</span>
+<h2 class="section-title">Get started in 3 simple steps</h2>
+</div>
+<div class="how-it-works-grid">
+<div class="glass-card step-card scroll-reveal">
+<div class="step-number">1.</div>
+<h3>Choose a template</h3>
+<p>You can choose from hundreds of industry-specific, proven-to-work templates so you don’t have to start from scratch.</p>
+</div>
+<div class="glass-card step-card scroll-reveal">
+<div class="step-number">2.</div>
+<h3>Personalisation</h3>
+<p>Set up targeting rules (e.g. exit-intent, cart value, geographic location) in minutes with our drag-and-drop editor.</p>
+</div>
+<div class="glass-card step-card scroll-reveal">
+<div class="step-number">3.</div>
+<h3>Integration and measurement</h3>
+<p data-placeholder="step3Text"></p>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="container">
+<div class="section-header scroll-reveal">
+<span class="section-label">What they said about us</span>
+<h2 class="section-title">Real results from real partners</h2>
+</div>
+<div class="testimonial-grid">
+<div class="glass-card testimonial-card scroll-reveal">
+<p class="testimonial-text">"I’m a massive fan of OptiMonk and I’ve  been a user of them for 5 years now and there is absolutely no one else I would choose to use."</p>
+<div class="testimonial-author-wrapper">
+<cite>Jason K Williamson <span>– E2 Agency</span></cite>
+</div>
+</div>
+<div class="glass-card testimonial-card scroll-reveal">
+<p class="testimonial-text">“We’ve been seeing a lot of good results on our business. First and foremost higher conversion rate combined with increased revenues as well.”</p>
+<div class="testimonial-author-wrapper">
+
+<cite>Laura Arnesen <span>– Christopher Cloos</span></cite>
+</div>
+</div>
+<div class="glass-card testimonial-card scroll-reveal">
+<p class="testimonial-text">“The team has been fantastic in helping  us find all those little areas on our site to get those extra conversions, stuff that we have never thought about would make  a big impact.”</p>
+<div class="testimonial-author-wrapper">
+
+<cite>Matt Edmundson <span>– Vegetology</span></cite>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="container">
+<div class="section-header scroll-reveal">
+<span class="section-label">Results</span>
+<h2 class="section-title">Proven growth</h2>
+</div>
+<div class="stats-grid">
+<div class="glass-card stat-card scroll-reveal">
+<div class="stat-number" data-placeholder="stat1Number"></div>
+<div class="stat-label" data-placeholder="stat1Label"></div>
+</div>
+<div class="glass-card stat-card scroll-reveal">
+<div class="stat-number">12%</div>
+<div class="stat-label">Average conversion increase</div>
+</div>
+<div class="glass-card stat-card scroll-reveal">
+<div class="stat-number">+40%</div>
+<div class="stat-label">More returning customers</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="cta-section">
+<div class="cta-content scroll-reveal">
+<h2 data-placeholder="ctaTitle"></h2>
+<p data-placeholder="ctaSubtitle"></p>
+<a href="https://app.optimonk.com/register/en" class="btn btn-primary">Try it for free</a>
+</div>
+</section>
+
+<div class="om-campaign" id="popup1">
+<div class="om-overlay"></div>
+<div class="om-popup">
+<div class="om-close" onclick="closeAllPopups()">&times;</div>
+<div class="om-popup-inner">
+<div class="om-left">
+<div class="om-brand" data-placeholder="brandLogoHTML"></div>
+<div class="om-title" data-placeholder="popup1Title"></div>
+<div class="om-text" data-placeholder="popup1Text"></div>
+<input type="email" class="om-input" placeholder="Enter your e-mail address">
+<button class="om-button" data-placeholder="popup1Button"></button>
+</div>
+<div class="om-right">
+<div class="om-image-panner" id="panner_1">
+    <button class="om-image-btn om-image-url-btn" data-popup-id="1" title="Kép URL cseréje">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+        </svg>
+    </button>   
+<img data-placeholder="popup1Image" id="popupImage_1" src="..." alt="Popup kép" class="om-product-img">
+</div>
+<div class="om-image-controls">
+                        <button class="om-image-btn om-toggle-fit" data-popup-id="1" title="Váltás 'Kitöltés'/'Teljes kép' között">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75v4.5m0-4.5h-4.5m4.5 0L15 9M20.25 20.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-pan-left" data-popup-id="1" title="Balra mozgatás">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-pan-right" data-popup-id="1" title="Jobbra mozgatás">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-image-swap-btn" data-popup-id="1" title="Kép cseréje">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </button>
+                    </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="om-campaign" id="popup2">
+<div class="om-overlay"></div>
+<div class="om-popup">
+<div class="om-close" onclick="closeAllPopups()">&times;</div>
+<div class="om-popup-inner">
+<div class="om-left">
+<div class="om-brand" data-placeholder="brandLogoHTML"></div>
+<div class="om-title" data-placeholder="popup2Title"></div>
+<div class="om-text" data-placeholder="popup2Text"></div>
+<div class="om-products" data-placeholder="popup2Products"></div>
+<button class="om-button" data-placeholder="popup2Button"></button>
+</div>
+<div class="om-right">
+<div class="om-image-panner" id="panner_2">
+    <button class="om-image-btn om-image-url-btn" data-popup-id="2" title="Kép URL cseréje">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+        </svg>
+    </button>
+<img data-placeholder="popup2Image" id="popupImage_2" src="..." alt="Popup kép" class="om-product-img">
+</div>
+<div class="om-image-controls">
+                        <button class="om-image-btn om-toggle-fit" data-popup-id="2" title="Váltás 'Kitöltés'/'Teljes kép' között">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75v4.5m0-4.5h-4.5m4.5 0L15 9M20.25 20.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-pan-left" data-popup-id="2" title="Balra mozgatás">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-pan-right" data-popup-id="2" title="Jobbra mozgatás">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-image-swap-btn" data-popup-id="2" title="Kép cseréje">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </button>
+                    </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="om-campaign" id="popup3">
+<div class="om-overlay"></div>
+<div class="om-popup">
+<div class="om-close" onclick="closeAllPopups()">&times;</div>
+<div class="om-popup-inner">
+<div class="om-left">
+<div class="om-brand" data-placeholder="brandLogoHTML"></div>
+<div class="om-title" data-placeholder="popup3Title"></div>
+<div class="om-subtitle" data-placeholder="popup3Subtitle"></div>
+<div class="om-products" data-placeholder="popup3Products"></div>
+<button class="om-button" data-placeholder="popup3Button"></button>
+</div>
+<div class="om-right">
+<div class="om-image-panner" id="panner_3">
+    <button class="om-image-btn om-image-url-btn" data-popup-id="3" title="Kép URL cseréje">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+        </svg>
+    </button>
+<img data-placeholder="popup3Image" id="popupImage_3" src="..." alt="Popup kép" class="om-product-img">
+</div>
+<div class="om-image-controls">
+                        <button class="om-image-btn om-toggle-fit" data-popup-id="3" title="Váltás 'Kitöltés'/'Teljes kép' között">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75v4.5m0-4.5h-4.5m4.5 0L15 9M20.25 20.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-pan-left" data-popup-id="3" title="Balra mozgatás">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-pan-right" data-popup-id="3" title="Jobbra mozgatás">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
+                        <button class="om-image-btn om-image-swap-btn" data-popup-id="3" title="Kép cseréje">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </button>
+                    </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="om-campaign" id="popup4">
+<div class="om-overlay"></div>
+<div class="om-popup" style="max-width: 450px;"> <div class="om-close" onclick="closeAllPopups()">&times;</div>
+<div class="om-popup-inner-single"> <div class="om-left">
+<div class="om-brand" data-placeholder="brandLogoHTML"></div>
+<div class="om-title" data-placeholder="popup4Title"></div>
+<div class="om-text" data-placeholder="popup4Text"></div>
+<button class="om-button" data-placeholder="popup4Button"></button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="om-campaign" id="popup5">
+<div class="om-overlay"></div>
+<div class="om-popup om-spin-wheel-popup">
+<div class="om-close" onclick="closeAllPopups()">&times;</div>
+<div class="om-popup-inner om-spin-wheel-inner">
+
+<div class="om-spin-wheel-left">
+<div class="css-wheel-container">
+<div class="wheel-pointer"></div>
+<div class="css-wheel"></div>
+<div class="wheel-inner-circle"></div>
+</div>
+</div>
+
+<div class="om-spin-wheel-right">
+<div class="om-brand" data-placeholder="brandLogoHTML"></div>
+<div class="om-title" data-placeholder="popup5Title"></div>
+<div class="om-text" data-placeholder="popup5Text"></div>
+<input type="email" class="om-input om-spin-wheel-input" placeholder="Enter your e-mail address">
+<button class="om-button om-spin-wheel-button" data-placeholder="popup5Button"></button>
+<button class="om-secondary-button" onclick="closeAllPopups()">No, I’d rather pay full price.</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="om-campaign" id="popup6">
+<div class="om-overlay"></div>
+<div class="om-popup" style="max-width: 450px;">
+<div class="om-close" onclick="closeAllPopups()">&times;</div>
+<div class="om-popup-inner-single">
+<div class="om-left">
+<div class="om-brand" data-placeholder="brandLogoHTML"></div>
+<div class="om-title" data-placeholder="popup6Title"></div>
+<div class="om-timer" data-placeholder="popup6Urgency">14:59</div>
+<div class="om-text" data-placeholder="popup6Text"></div>
+<button class="om-button" data-placeholder="popup6Button"></button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="om-modal" id="problem1-modal">
+<div class="om-modal-overlay"></div>
+<div class="om-modal-content">
+<div class="om-modal-close">&times;</div>
+<div class="om-modal-icon">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+</svg>
+</div>
+<h2 data-placeholder="problem1Title"></h2>
+<div class="om-modal-body" data-placeholder="problem1ModalDesc"></div>
+</div>
+</div>
+<div class="om-modal" id="problem2-modal">
+<div class="om-modal-overlay"></div>
+<div class="om-modal-content">
+<div class="om-modal-close">&times;</div>
+<div class="om-modal-icon">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+</svg>
+</div>
+<h2 data-placeholder="problem2Title"></h2>
+<div class="om-modal-body" data-placeholder="problem2ModalDesc"></div>
+</div>
+</div>
+<div class="om-modal" id="problem3-modal">
+<div class="om-modal-overlay"></div>
+<div class="om-modal-content">
+<div class="om-modal-close">&times;</div>
+<div class="om-modal-icon">
+<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+</svg>
+</div>
+<h2 data-placeholder="problem3Title"></h2>
+<div class="om-modal-body" data-placeholder="problem3ModalDesc"></div>
+</div>
+</div>
+<div class="om-nav-btn om-nav-prev" id="prevBtn">
+<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+</svg>
+</div>
+<div class="om-nav-btn om-nav-next" id="nextBtn">
+<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+</svg>
+</div>
+
+<div class="tools-panel">
+    <label for="colorPicker">Brand color:</label>
+    <input type="color" id="colorPicker" value="#FF6B35" title="Change brand color">
+
+    <label for="editModeToggle">Edit:</label>
+    <button class="tools-panel-btn" id="editModeToggle" title="Edit mode on/off">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+        </svg>
+    </button>
+
+    <label for="saveButton">Save:</label>
+   <button class="tools-panel-btn" id="saveButton" title="Változtatások mentése">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+        <polyline stroke-linecap="round" stroke-linejoin="round" points="17 21 17 13 7 13 7 21" />
+        <polyline stroke-linecap="round" stroke-linejoin="round" points="7 3 7 8 15 8" />
+    </svg>
+</button>
+    <label for="downloadButton">Download:</label>
+    <button class="tools-panel-btn" id="downloadButton" title="Oldal letöltése (tiszta HTML)">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+    </button>
+</div>
+
+
+<script id="data-injector">
+// =================================================================
+// === 1. GLOBÁLIS VÁLTOZÓK ÉS ADATOK ===
+// =================================================================
+
+// IDE ILLESZD BE AZ N8N KIMENETÉT
+const n8nData = {
+  "Company": "Osmos",
+  "Industry": "szolgáltatások és digitális termékek (szoftverek, előfizetések, kurzusok)",
+  "ConversionRate": "4.8%",
+  "Platform": "Webflow",
+  "TargetFeature1": "Omnichannel retail media operating system",
+  "TargetFeature2": "Retailers and e-commerce marketplaces",
+  "TargetFeature3": "B2B SaaS",
+  "mainBrandColor": "#3498DB",
+  "keyTrend": "Retail media monetization and omnichannel advertising",
+  "keyProducts": ["Adscape","ControlHub","StratEdge"],
+  "socialProof": "Trusted by major brands like Tata 1mg, Disney+ Hotstar, and Firstcry",
+  "scrapedLogoURL": "https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/66e530ba9101468db765ccdc_Open-Graph%20Osmos.png",
+  "scrapedProductURL": "",
+  "cleanImageUrls": ["","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/6578277cb969d6fdaf6cc057_Group%20141203.webp","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65815bc69142274663ef4b98_Group%20141154.webp","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65dd8af77d0845821fa6001b_herowebflow02.webp","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65dd8af77d0845821fa60050_herowebflow03.webp","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65dd89d24784b8a2cf7ca623_herowebflow001.webp","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65a7a2282a7d13e0dd2a2ca5_Firstcry.webp","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/6908d856ea7ba5bf539e990f_takealot.png","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/6908d856630f3dce3f46a089_pick-n-pay.png","https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/6908d85577b5877b8915a640_first-cry.png"],
+  "brandLogoHTML": "<img src=\"https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/681f44c4f5b89b4211fa64d4_osmos.svg\" alt=\"Osmos Logo\">",
+  "pageTitle": "OptiMonk x Osmos | Personalized Strategy",
+  "analysisTitle": "Unlock Osmos's Hidden Revenue Potential",
+  "analysisText": "Osmos operates in the competitive B2B SaaS space with a 4.8% industry average conversion rate, positioning them well above many tech companies. <ul><li>Their comprehensive retail media platform serves major clients like Tata 1mg and Disney+ Hotstar, demonstrating strong market validation</li><li>The omnichannel approach with 19+ apps across Adscape, ControlHub, and StratEdge creates multiple touchpoints for engagement</li><li>However, there's significant untapped potential in lead nurturing and demo conversion optimization that could boost their enterprise sales pipeline by 40-60%</li></ul>",
+  "heroBadge": "Enterprise SaaS Strategy",
+  "heroTitle": "Osmos x OptiMonk",
+  "heroSubtitle": "Transform your retail media platform's visitor experience and convert more enterprise prospects into qualified demos with personalized engagement strategies.",
+  "heroDemoButton": "See Osmos-Tailored Demo",
+  "problemsLabel": "B2B SaaS Challenges",
+  "problemsTitle": "Sound familiar to your enterprise sales process?",
+  "problem1Title": "Enterprise prospects browse your platform but hesitate on pricing",
+  "problem1Text": "Complex B2B buyers need multiple touchpoints before committing to enterprise software demos.",
+  "problem2Title": "Qualified leads abandon demo requests mid-form",
+  "problem2Text": "Long enterprise forms create friction, causing potential clients to drop off before scheduling.",
+  "problem3Title": "No systematic way to nurture enterprise prospects",
+  "problem3Text": "Without proper lead capture, valuable enterprise visitors leave without engaging further.",
+  "problem1ModalDesc": "<h3>The Root Problem</h3><p>Enterprise software buyers typically require 6-8 touchpoints before making purchasing decisions. When prospects browse your retail media solutions but don't immediately convert, you lose valuable opportunities to nurture them through the complex B2B buying journey.</p><h3>OptiMonk's Solution</h3><p>OptiMonk captures hesitant visitors with targeted exit-intent popups offering valuable resources like ROI calculators, case studies, or exclusive whitepapers, keeping them engaged in your sales funnel.</p>",
+  "problem2ModalDesc": "<h3>The Root Problem</h3><p>Enterprise demo forms often require extensive information, creating friction that causes qualified prospects to abandon the process. This is especially problematic for complex platforms like retail media solutions where demonstrations are crucial for conversion.</p><h3>OptiMonk's Solution</h3><p>OptiMonk simplifies the initial engagement with progressive profiling and smart forms that capture essential contact information first, then gradually collect additional details through follow-up interactions.</p>",
+  "problem3ModalDesc": "<h3>The Root Problem</h3><p>Without systematic lead capture, enterprise prospects who aren't ready to buy immediately disappear forever. In B2B SaaS, this represents massive lost revenue potential since buying cycles can extend 6-18 months.</p><h3>OptiMonk's Solution</h3><p>OptiMonk creates multiple engagement opportunities through content gates, newsletter signups, and resource downloads, building a qualified prospect database for long-term nurturing campaigns.</p>",
+  "solutionsTitle": "How OptiMonk Accelerates Osmos's Enterprise Growth",
+  "solutionsSubtitle": "Leverage your retail media expertise to create more qualified enterprise opportunities.",
+  "solution1Title": "Exit-Intent for Enterprise Prospects",
+  "solution1Text": "Capture leaving visitors with targeted offers like ROI calculators or exclusive retail media insights.",
+  "solution2Title": "Demo Conversion Optimization",
+  "solution2Text": "Streamline demo requests with progressive forms and compelling value propositions.",
+  "solution3Title": "Enterprise Lead Nurturing",
+  "solution3Text": "Build qualified prospect lists through gated content and thought leadership resources.",
+  "solution4Title": "Industry-Specific Targeting",
+  "solution4Text": "Deliver personalized messages based on visitor industry (e-commerce, retail, marketplace).",
+  "solution5Title": "Interactive Engagement",
+  "solution5Text": "Use interactive elements like ROI calculators to qualify and engage enterprise prospects.",
+  "solution6Title": "Urgency for Enterprise Offers",
+  "solution6Text": "Create time-sensitive opportunities for exclusive demos or limited consulting sessions.",
+  "step3Text": "OptiMonk seamlessly integrates with Osmos's existing tech stack and CRM systems for unified prospect tracking.",
+  "stat1Number": "4.8",
+  "stat1Label": "Industry Average Conversion Rate for B2B SaaS",
+  "ctaTitle": "Ready to accelerate Osmos's enterprise growth?",
+  "ctaSubtitle": "Start with our free plan and see how OptiMonk can transform your retail media platform's conversion rates.",
+  "popup1Title": "Wait! Unlock Your Retail Media ROI Potential",
+  "popup1Text": "Get our exclusive Enterprise Retail Media ROI Calculator and discover how much revenue you could generate with the right platform.",
+  "popup1Button": "Get My ROI Calculator",
+  "popup1Image": "https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65dd8af77d0845821fa6001b_herowebflow02.webp",
+  "popup2Title": "Perfect Choice! Want to See More?",
+  "popup2Text": "Since you're interested in our retail media platform, you might also want to explore our complete omnichannel solution suite.",
+  "popup2Products": "<div class=\"om-product\">✓ Adscape - Premium advertising experience</div><div class=\"om-product\">✓ ControlHub - Scalable operations management</div><div class=\"om-product\">✓ StratEdge - Revenue maximization tools</div>",
+  "popup2Button": "Explore Complete Suite",
+  "popup2Image": "https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65dd8af77d0845821fa60050_herowebflow03.webp",
+  "popup3Title": "Join the Retail Media Leaders Circle",
+  "popup3Subtitle": "Get exclusive insights from industry experts and early access to new platform features.",
+  "popup3Products": "<div class=\"om-product\">📊 Monthly retail media trend reports</div><div class=\"om-product\">🚀 Early access to new Osmos features</div><div class=\"om-product\">🤝 Exclusive networking opportunities</div>",
+  "popup3Button": "Join the Circle",
+  "popup3Image": "https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65dd89d24784b8a2cf7ca623_herowebflow001.webp",
+  "popup4Title": "We See You're Interested in Enterprise Solutions...",
+  "popup4Text": "Get a personalized demo of how Osmos's omnichannel retail media platform can transform your business's advertising revenue.",
+  "popup4Button": "Schedule My Demo",
+  "popup4Image": "https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/6578277cb969d6fdaf6cc057_Group%20141203.webp",
+  "popup5Title": "Spin for Exclusive Access!",
+  "popup5Text": "Enter your email and spin for a chance to win exclusive retail media insights, free consultations, or early platform access!",
+  "popup5Button": "Spin Now!",
+  "popup5NoThanks": "No thanks, I'll pay full consulting rates",
+  "popup6Title": "Hurry! Your Demo Slot is About to Expire!",
+  "popup6Text": "We're holding a personalized Osmos platform demo slot for you, but it expires in 10 minutes. Don't miss this opportunity!",
+  "popup6Button": "Claim My Demo Now!",
+  "popup6Image": "https://cdn.prod.website-files.com/657711ffb64e787c6cc257dd/65815bc69142274663ef4b98_Group%20141154.webp"
+};
+
+
+</script>
+
+<script>
+// === Globális Változók ===
+let currentPopupIndex = 1;
+const totalPopups = 6;
+let countdownInterval = null;
+let navButtons = null;
+let reveals = null;
+let isEditMode = false;
+let isSaving = false;
+
+let imageIndexes = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+let imageFitStates = { 1: 'cover', 2: 'cover', 3: 'cover', 4: 'cover', 5: 'cover', 6: 'cover' };
+let imagePosStates = { 1: 50, 2: 50, 3: 50, 4: 50, 5: 50, 6: 50 }; 
+
+// =================================================================
+// === FŐ INDÍTÓ FÜGGVÉNY (DOMContentLoaded) ===
+// =================================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    navButtons = document.querySelectorAll('.om-nav-btn');
+    reveals = document.querySelectorAll(".scroll-reveal");
+
+    // === JAVÍTÁS: INJEKTOR HÍVÁS ===
+    // Csak akkor fut le, ha az 'n8nData' objektum létezik (vagyis az eredeti sablonban)
+    // A mentett fájlban ez 'undefined' lesz, így a 'MINDEN OK' ág fut le.
+    if (typeof n8nData !== 'undefined' && n8nData.Company) {
+        console.log("Adat injektálás (n8nData) fut...");
+        injectorFunction(n8nData);
+    } else {
+        console.log("MINDEN OK: n8nData nem található, az injektálás kihagyva (ez a mentett oldalon normális).");
+    }
+
+    setupEventListeners();
+    revealOnScroll();
+});
+
+// =================================================================
+// === 3. SEGÉDFÜGGVÉNYEK ===
+// =================================================================
+
+    // --- TARTALOM BEILLESZTŐ ---
+    function injectorFunction(data) {
+        document.querySelectorAll('[data-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-placeholder');
+            if (data[key] !== undefined && data[key] !== null) {
+                if (el.tagName === 'IMG') { 
+                    el.src = data[key];
+                } else { 
+                    if (key.endsWith('Desc') || key.endsWith('analysisText') || key.endsWith('Products') || key.endsWith('Urgency')) {
+                        el.innerHTML = formatGeneratedHtml(data[key]);
+                    } else {
+                        el.innerHTML = data[key];
+                    }
+                }
+            }
+        });
+        
+        const titleEl = document.querySelector('title[data-placeholder="pageTitle"]');
+        if (titleEl && data["pageTitle"]) {
+            document.title = data["pageTitle"];
+        }
+
+        setBrandColor(data.mainBrandColor || '#FF6B35'); 
+    }
+
+    // --- FORMÁZÓ ---
+    function formatGeneratedHtml(text) {
+        if (!text) return '';
+        let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
+    }
+
+    // --- SZÍNBEÁLLÍTÓ FUNKCIÓ ---
+    function setBrandColor(hexColor) {
+        if (!hexColor || !/^#([0-9A-F]{3}){1,2}$/i.test(hexColor)) {
+            if (hexColor && hexColor !== "") {
+                console.warn(`A 'mainBrandColor' (${hexColor}) formátuma érvénytelen.`);
+            } else {
+                console.warn("A 'mainBrandColor' hiányzik vagy üres.");
+            }
+            hexColor = '#FF6B35'; 
+        }
+        
+        let hex = hexColor.substring(1); 
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        const finalHex = '#' + hex; 
+
+        document.documentElement.style.setProperty('--color-primary', finalHex);
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        document.documentElement.style.setProperty('--color-primary-rgb', `${r}, ${g}, ${b}`);
+
+        const colorPicker = document.getElementById('colorPicker');
+        if (colorPicker) {
+            colorPicker.value = finalHex;
+        }
+    }
+    
+    // --- SZERKESZTŐ MÓD KAPCSOLÓ ---
+    function toggleEditMode() {
+        isEditMode = !isEditMode; 
+        
+        document.getElementById('editModeToggle').classList.toggle('active', isEditMode);
+        document.body.classList.toggle('edit-mode-active', isEditMode);
+
+        document.querySelectorAll('[data-placeholder]:not(img)').forEach(el => {
+            el.contentEditable = isEditMode;
+        });
+
+        if(isEditMode) {
+            console.log("Szerkesztő mód BEKAPCSOLVA.");
+        } else {
+            console.log("Szerkesztő mód KIKAPCSOLVA.");
+        }
+    }
+
+    // --- NÉV TISZTÍTÓ A MENTÉSHEZ ---
+    function cleanString(str) {
+        if (!str) return 'default';
+        return str
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]/g, '');
+    }
+
+    // --- MENTÉS FUNKCIÓ (HTML TISZTÍTÁSSAL) ---
+    async function triggerSaveToGithub() {
+        if (isSaving) {
+            console.log("Mentés már folyamatban, kérem várjon.");
+            return;
+        }
+        isSaving = true;
+
+        const notificationEl = document.getElementById('save-notification');
+        if (!notificationEl) {
+            console.error("A '#save-notification' elem nem található!");
+            isSaving = false;
+            return;
+        }
+
+
+        
+        const N8N_BASE_WEBHOOK_URL = 'https://n8n.onsiteretargeting.com/webhook/saving-changes';
+
+        // 1. Vizuális visszajelzés
+        notificationEl.textContent = "Saving...";
+        notificationEl.classList.add('show');
+
+        // 2. Tisztítás: Szerkesztő mód ideiglenes kikapcsolása
+        const wasEditMode = isEditMode;
+        if (wasEditMode) {
+            toggleEditMode(); 
+        }
+
+        try {
+            // 3. Adatok kinyerése
+            const pathParts = window.location.pathname.split('/').filter(part => part.length > 0);
+            const person = pathParts[0] || 'unknown'; 
+            // JAVÍTÁS: A 'n8nData' itt még létezik, mert ez a szkript fut
+            const companyKey = (typeof n8nData !== 'undefined') ? cleanString(n8nData.Company) : 'default';
+
+            // 4. HTML "STATIKUSSÁ" TÉTELE
+            const cleanDoc = document.documentElement.cloneNode(true);
+
+            // Eltávolítjuk a szerkesztő panelt a klónból
+            const editorPanel = cleanDoc.querySelector('.tools-panel');
+            if (editorPanel) {
+                editorPanel.remove();
+            }
+
+            // Eltávolítjuk a mentés értesítőt a klónból
+            const notificationPanel = cleanDoc.querySelector('#save-notification');
+            if (notificationPanel) {
+                notificationPanel.remove();
+            }
+
+            // === A LEGFONTOSABB JAVÍTÁS ===
+            // Eltávolítjuk az "Adat" szkriptet a klónból
+            const dataScript = cleanDoc.querySelector('#data-injector');
+            if (dataScript) {
+                dataScript.remove();
+            }
+
+            const currentHtmlContent = cleanDoc.outerHTML;
+            const finalWebhookUrl = `${N8N_BASE_WEBHOOK_URL}?person=${person}`;
+
+            // 5. Küldés a háttérben
+            const response = await fetch(finalWebhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    companyKey: companyKey,
+                    htmlContent: currentHtmlContent
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Az n8n szerver hibát jelzett: ' + response.statusText);
+            }
+
+            notificationEl.textContent = "Saved!";
+            console.log("Mentés sikeres!");
+
+        } catch (err) {
+            console.error('Hiba a mentés során:', err);
+            notificationEl.textContent = "Saving Failed!";
+            notificationEl.style.backgroundColor = "#E63946"; // Pirosra vált hiba esetén
+        } finally {
+            // 6. Visszaállítás
+            if (wasEditMode) {
+                toggleEditMode(); // Visszakapcsoljuk az edit módot
+            }
+
+            setTimeout(() => {
+                notificationEl.classList.remove('show'); // Értesítés elrejtése
+                isSaving = false; // Újra engedélyezzük a mentést
+                
+                // Alapértelmezett állapot visszaállítása 0.5s múlva (az animáció után)
+                setTimeout(() => {
+                    notificationEl.textContent = "Changes saved";
+                    notificationEl.style.backgroundColor = "var(--color-primary)";
+                }, 500);
+
+            }, 2000); // 2 másodpercig látszik az üzenet
+        }
+    }
+
+    // --- ESEMÉNYKEZELŐK BEÁLLÍTÁSA ---
+    function setupEventListeners() {
+        
+        // Színválasztó
+        const colorPicker = document.getElementById('colorPicker');
+        if (colorPicker) {
+            colorPicker.addEventListener('input', (e) => {
+                setBrandColor(e.target.value);
+            });
+        }
+        
+        // Szerkesztő mód gomb
+        const editModeButton = document.getElementById('editModeToggle');
+        if (editModeButton) {
+            editModeButton.addEventListener('click', toggleEditMode);
+        }
+
+// === JAVÍTVA: Mentés gomb ===
+    const saveButton = document.getElementById('saveButton');
+    if (saveButton) {
+        saveButton.addEventListener('click', triggerSaveToGithub);
+    }
+
+function triggerDownloadHTML() {
+    console.log("HTML letöltés indítása...");
+
+    // 1. Szerkesztő mód ideiglenes kikapcsolása
+    const wasEditMode = isEditMode;
+    if (wasEditMode) {
+        toggleEditMode();
+    }
+
+    try {
+        // 2. HTML "STATIKUSSÁ" TÉTELE (klónozás)
+        // Készítünk egy másolatot az egész oldalról
+        const cleanDoc = document.documentElement.cloneNode(true);
+
+        // 3. Eltávolítjuk a felesleges elemeket a klónból
+        const editorPanel = cleanDoc.querySelector('.tools-panel');
+        if (editorPanel) {
+            editorPanel.remove();
+        }
+
+        const notificationPanel = cleanDoc.querySelector('#save-notification');
+        if (notificationPanel) {
+            notificationPanel.remove();
+        }
+
+        // A legfontosabb: eltávolítjuk az adatokat beillesztő szkriptet
+        const dataScript = cleanDoc.querySelector('#data-injector');
+        if (dataScript) {
+            dataScript.remove();
+        }
+        
+        // === EZ AZ ÚJ RÉSZ: KÉPKEZELŐK ELTÁVOLÍTÁSA ===
+        // Eltávolítjuk a kép alatti gombokat (pl. nyíl, csere)
+        const imageControls = cleanDoc.querySelectorAll('.om-image-controls');
+        imageControls.forEach(controls => controls.remove());
+
+        // Eltávolítjuk a kép feletti "URL csere" gombokat is
+        const urlButtons = cleanDoc.querySelectorAll('.om-image-url-btn');
+        urlButtons.forEach(btn => btn.remove());
+        // === ÚJ RÉSZ VÉGE ===
+
+        // Eltávolítjuk a szerkesztő mód osztályait a body-ról
+        const bodyEl = cleanDoc.querySelector('body');
+        if(bodyEl) {
+            bodyEl.classList.remove('edit-mode-active', 'editor-active-global');
+        }
+
+        // A "tiszta" HTML kód kinyerése
+        const currentHtmlContent = cleanDoc.outerHTML;
+
+        // 4. Fájlnév generálása
+        let companyName = 'demo-oldal';
+        if (typeof n8nData !== 'undefined' && n8nData.Company) {
+            companyName = cleanString(n8nData.Company); // A 'cleanString' funkció már létezik
+        } else {
+            const title = cleanDoc.querySelector('title').textContent;
+            if(title) {
+                    companyName = cleanString(title.split('|')[0]);
+            }
+        }
+        const fileName = `${companyName}_demo.html`;
+
+
+        // 5. Letöltés indítása (Blob létrehozása és kattintás)
+        const blob = new Blob([currentHtmlContent], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+
+        console.log(`Letöltés sikeres: ${fileName}`);
+
+    } catch (err) {
+        console.error('Hiba a HTML letöltése során:', err);
+        alert('Hiba történt a fájl előkészítése során.');
+    } finally {
+        // 6. Visszaállítás
+        if (wasEditMode) {
+            toggleEditMode(); // Visszakapcsoljuk az edit módot
+        }
+    }
+}
+
+const downloadButton = document.getElementById('downloadButton');
+        if (downloadButton) {
+            downloadButton.addEventListener('click', triggerDownloadHTML);
+        }
+                
+        // --- Titkos kódok figyelése ---
+        const secretCode = ['e', 'd', 'i', 't', 'o', 'r'];
+        let secretCodePosition = 0;
+        const saveCode = ['s', 'a', 'v', 'e'];
+        let saveCodePosition = 0;
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            
+            // Ne fusson le, ha a felhasználó épp gépel valahova
+            if (document.activeElement.tagName.toLowerCase() === 'input' || document.activeElement.contentEditable === 'true') {
+                return; 
+            }
+
+
+
+            // "EDITOR" panel kód figyelő
+            if (key === secretCode[secretCodePosition]) {
+                secretCodePosition++;
+                if (secretCodePosition === secretCode.length) {
+                    const panel = document.querySelector('.tools-panel');
+                    if (panel) {
+                        panel.classList.toggle('visible');
+                        document.body.classList.toggle('editor-active-global', panel.classList.contains('visible'));
+                    }
+                    secretCodePosition = 0;
+                }
+            } else {
+                secretCodePosition = (key === secretCode[0]) ? 1 : 0;
+            }
+        });
+
+        // Képcsere (⟳) gomb
+        document.querySelectorAll('.om-image-swap-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const popupId = e.target.closest('.om-image-btn').getAttribute('data-popup-id');
+                swapPopupImage(popupId);
+            });
+        });
+
+        // Méretváltó (⛶) gomb
+        document.querySelectorAll('.om-toggle-fit').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const popupId = e.target.closest('.om-image-btn').getAttribute('data-popup-id');
+                toggleImageFit(popupId);
+            });
+        });
+
+        // Kép URL cserélő gomb
+        document.querySelectorAll('.om-image-url-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); 
+
+                const popupId = e.target.closest('.om-image-btn').getAttribute('data-popup-id');
+                const imageElement = document.getElementById(`popupImage_${popupId}`);
+
+                if (!imageElement) {
+                    console.error('Nem található a kép elem:', popupId);
+                    return;
+                }
+
+                const newUrl = prompt("Kérlek, add meg az új kép URL-címét:", imageElement.src);
+
+                if (newUrl && newUrl.trim() !== "") {
+                    imageElement.src = newUrl.trim();
+                    console.log(`Kép cserélve (Popup ${popupId}): ${newUrl.trim()}`);
+                    
+                    imageElement.style.objectPosition = '50% center';
+                    imagePosStates[popupId] = 50; 
+                } else {
+                    console.log('Képcsere megszakítva.');
+                }
+            });
+        });
+
+        // Képmozgatás gombok
+        document.querySelectorAll('.om-pan-left').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const popupId = e.target.closest('.om-image-btn').getAttribute('data-popup-id');
+                panImage(popupId, -1);
+            });
+        });
+
+        document.querySelectorAll('.om-pan-right').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const popupId = e.target.closest('.om-image-btn').getAttribute('data-popup-id');
+                panImage(popupId, 1);
+            });
+        });
+        
+        // Probléma Modálok
+        document.querySelectorAll('.problem-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const modalId = card.getAttribute('data-modal-target');
+                showOmModal(modalId);
+            });
+        });
+
+        // Megoldás Kártyák -> Popup demók
+        document.querySelectorAll('.solution-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const popupId = card.getAttribute('data-popup-target');
+                if(popupId) {
+                    currentPopupIndex = parseInt(popupId, 10);
+                    hideNavButtons(); 
+                    showPopup(currentPopupIndex); 
+                }
+            });
+        });
+
+        // Modál bezárók
+        document.querySelectorAll('.om-modal-overlay, .om-modal-close').forEach(el => {
+            el.addEventListener('click', () => {
+                closeOmModals();
+            });
+        });
+
+        // "Nézd meg a demót" gomb
+        const demoButton = document.getElementById("demoButton");
+        if (demoButton) {
+             demoButton.addEventListener("click", (e) => {
+                 e.preventDefault();
+                 currentPopupIndex = 1;
+                 showNavButtons(); 
+                 showPopup(1);
+             });
+        }
+
+        // Popup navigációs nyilak
+        document.getElementById('prevBtn').addEventListener('click', () => navigatePopup(-1));
+        document.getElementById('nextBtn').addEventListener('click', () => navigatePopup(1));
+
+        // Popup overlay bezárás
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('om-overlay')) {
+                closeAllPopups();
+            }
+        });
+
+        // Billentyűzet (Escape és Nyilak)
+        document.addEventListener('keydown', (e) => {
+            // Ezt a figyelőt már a setupEventListeners() kezeli
+            const anyPopupOpen = document.querySelector('.om-campaign.active');
+            const anyModalOpen = document.querySelector('.om-modal.active');
+            
+            if (document.activeElement.tagName.toLowerCase() === 'input' || document.activeElement.contentEditable === 'true') {
+                if (e.key === 'Escape') {
+                    document.activeElement.blur(); 
+                }
+                return; 
+            }
+            
+            if (anyPopupOpen) {
+                if (e.key === 'ArrowLeft') navigatePopup(-1);
+                if (e.key === 'ArrowRight') navigatePopup(1);
+                if (e.key === 'Escape') closeAllPopups();
+            }
+            if (anyModalOpen) {
+                if (e.key === 'Escape') closeOmModals();
+            }
+        });
+        
+        window.addEventListener("scroll", revealOnScroll);
+    }
+
+    // =================================================================
+    // === MODÁL FUNKCIÓK ===
+    // =================================================================
+    function showOmModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeOmModals() {
+        document.querySelectorAll('.om-modal.active').forEach(modal => {
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 300);
+        });
+        if (!document.querySelector('.om-campaign.active')) {
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // =================================================================
+    // === KÉP MANIPULÁLÓ LOGIKA ===
+    // =================================================================
+
+    function swapPopupImage(popupId) {
+        // A mentett oldalon az n8nData nem létezik, ezért 'cleanImageUrls' sincs
+        if (typeof n8nData === 'undefined' || !n8nData.cleanImageUrls || !Array.isArray(n8nData.cleanImageUrls) || n8nData.cleanImageUrls.length === 0) {
+            console.warn("Nincsenek elérhető képek a cseréhez (ez a mentett oldalon normális).");
+            return;
+        }
+        const imageList = n8nData.cleanImageUrls;
+        
+        imageIndexes[popupId]++;
+        if (imageIndexes[popupId] >= imageList.length) {
+            imageIndexes[popupId] = 0;
+        }
+
+        const newImageUrl = imageList[imageIndexes[popupId]];
+        const imageElement = document.getElementById(`popupImage_${popupId}`);
+        
+        if (imageElement) {
+            imageElement.src = newImageUrl;
+            imageElement.style.objectPosition = '50% center'; 
+            imagePosStates[popupId] = 50; 
+        }
+    }
+
+    function toggleImageFit(popupId) {
+        const imageElement = document.getElementById(`popupImage_${popupId}`);
+        if (!imageElement) return;
+
+        const currentState = imageFitStates[popupId];
+        const newState = (currentState === 'cover') ? 'contain' : 'cover';
+        
+        imageElement.style.objectFit = newState;
+        imageFitStates[popupId] = newState;
+
+        const panButtonLeft = document.querySelector(`.om-pan-left[data-popup-id="${popupId}"]`);
+        const panButtonRight = document.querySelector(`.om-pan-right[data-popup-id="${popupId}"]`);
+
+        if (newState === 'contain') {
+            imageElement.style.objectPosition = 'center';
+            imagePosStates[popupId] = 50; 
+            if (panButtonLeft) panButtonLeft.style.opacity = '0.3';
+            if (panButtonRight) panButtonRight.style.opacity = '0.3';
+        } else {
+            if (panButtonLeft) panButtonLeft.style.opacity = '1';
+            if (panButtonRight) panButtonRight.style.opacity = '1';
+        }
+    }
+
+    function panImage(popupId, direction) {
+        const imageElement = document.getElementById(`popupImage_${popupId}`);
+        if (!imageElement) return;
+
+        if (imageFitStates[popupId] !== 'cover') {
+            alert("A kép mozgatása csak 'Kitöltés' (⛶) nézetben látható. Válts nézetet, majd próbáld újra.");
+            return;
+        }
+
+        const step = 10;
+        let currentPos = imagePosStates[popupId];
+        let newPos = currentPos + (direction * step);
+
+        if (newPos < 0) newPos = 0;
+        if (newPos > 100) newPos = 100;
+        
+        imagePosStates[popupId] = newPos;
+        imageElement.style.objectPosition = `${newPos}% center`;
+    }
+    
+    // =================================================================
+    // === SZÁMLÁLÓ ÉS SCROLL ANIMÁCIÓK ===
+    // =================================================================
+    function animateCountUp(el) {
+        // JAVÍTÁS: Ha nincs n8nData, a szöveget használja
+        const targetText = (typeof n8nData !== 'undefined' && el.getAttribute('data-placeholder') === 'stat1Number') ? n8nData.stat1Number : el.textContent;
+        if (!targetText) return;
+        const target = parseFloat(targetText.replace(/[^0-9.,]/g, '').replace(',', '.'));
+        if (isNaN(target)) return; 
+        
+        const prefix = targetText.match(/^[^+0-9]*/)?.[0] || ''; 
+        const suffix = targetText.match(/[^0-9.,]*$/)?.[0] || ''; 
+        const decimals = (target.toString().split('.')[1] || '').length;
+        const duration = 1500; 
+        let startTimestamp = null;
+
+        function step(timestamp) {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const currentValue = progress * (2 - progress) * target;
+           el.textContent = prefix + currentValue.toFixed(decimals) + suffix;
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                el.textContent = targetText;
+            }
+        }
+        el.textContent = prefix + (0).toFixed(decimals) + suffix; 
+        window.requestAnimationFrame(step);
+    }
+    
+    const revealOnScroll = () => {
+        if (!reveals) return;
+        for (let el of reveals) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100 && !el.classList.contains('revealed')) {
+                el.classList.add("revealed");
+                if (el.classList.contains('stat-card') && !el.dataset.animated) {
+                    const numberEl = el.querySelector('.stat-number');
+                    if (numberEl) {
+                        animateCountUp(numberEl);
+                        el.dataset.animated = 'true'; 
+                    }
+                }
+            }
+        }
+    };
+    
+    // =================================================================
+// === OPTIMONK POPUP KEZELÉS ===
+    // =================================================================
+
+    function showNavButtons() {
+        if (!navButtons) return;
+        navButtons.forEach(btn => {
+            btn.style.display = 'flex';
+        });
+    }
+    function hideNavButtons() {
+        if (!navButtons) return;
+        navButtons.forEach(btn => {
+            btn.style.display = 'none';
+        });
+    }
+
+    function showPopup(index) {
+        stopCountdown();
+
+        for (let i = 1; i <= totalPopups; i++) {
+            const popup = document.getElementById(`popup${i}`);
+            if (popup) {
+                popup.classList.remove('active');
+                popup.style.display = 'none';
+            }
+        }
+        const activePopup = document.getElementById(`popup${index}`);
+        if (activePopup) {
+            activePopup.style.display = 'flex';
+            setTimeout(() => {
+                activePopup.classList.add('active');
+            }, 10); 
+        }
+        
+        if (index === 6) {
+            const timerDisplay = document.querySelector('[data-placeholder="popup6Urgency"]');
+            if (timerDisplay) {
+                startCountdown(14 * 60 + 59, timerDisplay);
+            }
+        }
+        
+        if (!document.querySelector('.om-modal.active')) {
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function navigatePopup(direction) {
+        stopCountdown();
+        
+        currentPopupIndex += direction;
+        if (currentPopupIndex > totalPopups) {
+            currentPopupIndex = 1;
+        } else if (currentPopupIndex < 1) {
+            currentPopupIndex = totalPopups;
+        }
+        showPopup(currentPopupIndex);
+    }
+
+    function closeAllPopups() {
+        stopCountdown();
+        for (let i = 1; i <= totalPopups; i++) {
+            const popup = document.getElementById(`popup${i}`);
+            if (popup) {
+                popup.classList.remove('active');
+                popup.style.display = 'none';
+            }
+        }
+        hideNavButtons();
+        if (!document.querySelector('.om-modal.active')) {
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    function startCountdown(durationInSeconds, displayElement) {
+        clearInterval(countdownInterval);
+        let timer = durationInSeconds;
+        
+        function updateDisplay() {
+            const minutes = Math.floor(timer / 60);
+            let seconds = timer % 60;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            displayElement.textContent = `${minutes}:${seconds}`;
+        }
+        
+        updateDisplay();
+        timer--;
+
+        countdownInterval = setInterval(() => {
+            updateDisplay();
+            if (--timer < 0) {
+                timer = 0;
+                clearInterval(countdownInterval);
+                displayElement.textContent = "0:00";
+            }
+        }, 1000);
+    }
+
+    function stopCountdown() {
+        clearInterval(countdownInterval);
+    }
+</script>
+</body>
+</html>
